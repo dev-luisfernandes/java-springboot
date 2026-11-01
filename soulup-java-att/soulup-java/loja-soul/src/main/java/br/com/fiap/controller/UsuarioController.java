@@ -76,7 +76,6 @@ public class UsuarioController {
         return ResponseEntity.ok().build();
     }
 
-    // POST: Login/Validação simples de usuário comum
     @PostMapping("/login")
     public ResponseEntity<Usuario> loginRs(@RequestBody Usuario loginInput) throws ExcecoesConexao, ExcecoesRegraNegocio {
         Usuario usuario = usuarioBo.buscarPorEmailBo(loginInput.getEmail());

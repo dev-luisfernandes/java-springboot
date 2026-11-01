@@ -38,20 +38,6 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Suporte para requisições HTTP externas -->
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.14</version>
-        </dependency>
-
-        <!-- Conversão de objetos Java para JSON -->
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.14.0</version>
-        </dependency>
-
         <!-- Starter de testes do Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

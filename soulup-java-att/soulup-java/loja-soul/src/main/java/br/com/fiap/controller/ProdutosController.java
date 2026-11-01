@@ -5,6 +5,7 @@ import br.com.fiap.entities.Administrador;
 import br.com.fiap.entities.Produtos;
 import br.com.fiap.excecoes.ExcecoesConexao;
 import br.com.fiap.excecoes.ExcecoesRegraNegocio;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +25,9 @@ public class ProdutosController {
     }
 
     @GetMapping("/{id}")
-    public Produtos buscarPorIdRs(@PathVariable int id) throws ExcecoesConexao, ExcecoesRegraNegocio {
-        return produtosBo.buscarPorIdBo(id);
+    public ResponseEntity<Produtos> buscarPorIdRs(@PathVariable int id) throws ExcecoesConexao, ExcecoesRegraNegocio {
+        Produtos p = produtosBo.buscarPorIdBo(id);
+        return (p != null) ? ResponseEntity.ok(p) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
@@ -35,7 +37,7 @@ public class ProdutosController {
             @RequestBody Produtos produto) throws ExcecoesConexao, ExcecoesRegraNegocio {
 
         if (!adminPadrao.validarCredenciais(emailAdmin, senhaAdmin)) {
-            throw new ExcecoesRegraNegocio("Acesso negado: apenas Administradores podem cadastrar produtos.");
+            throw new ExcecoesRegraNegocio("Acesso negado: apenas Administradores podem cadastrar produtos.", HttpStatus.FORBIDDEN);
         }
 
         produtosBo.inserirBo(produto);
@@ -50,7 +52,7 @@ public class ProdutosController {
             @RequestBody Produtos produto) throws ExcecoesConexao, ExcecoesRegraNegocio {
 
         if (!adminPadrao.validarCredenciais(emailAdmin, senhaAdmin)) {
-            throw new ExcecoesRegraNegocio("Acesso negado: apenas Administradores podem atualizar produtos.");
+            throw new ExcecoesRegraNegocio("Acesso negado: apenas Administradores podem cadastrar produtos.", HttpStatus.FORBIDDEN);
         }
 
         produtosBo.atualizarBo(produto);
@@ -64,10 +66,11 @@ public class ProdutosController {
             @PathVariable int id) throws ExcecoesConexao, ExcecoesRegraNegocio {
 
         if (!adminPadrao.validarCredenciais(emailAdmin, senhaAdmin)) {
-            throw new ExcecoesRegraNegocio("Acesso negado: apenas Administradores podem deletar produtos.");
+            throw new ExcecoesRegraNegocio("Acesso negado: apenas Administradores podem cadastrar produtos.", HttpStatus.FORBIDDEN);
         }
 
         produtosBo.deletarBo(id);
         return ResponseEntity.ok().build();
     }
+
 }
