@@ -11,7 +11,6 @@ public class AdministradorBo {
 
         Administrador adminPadrao = new Administrador();
 
-        // Utiliza o próprio método da sua entidade
         if (adminPadrao.validarCredenciais(email, senha)) {
             return adminPadrao;
         }

@@ -4,6 +4,7 @@ import br.com.fiap.dao.UsuarioDao;
 import br.com.fiap.entities.Usuario;
 import br.com.fiap.excecoes.ExcecoesConexao;
 import br.com.fiap.excecoes.ExcecoesRegraNegocio;
+import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 
@@ -42,7 +43,7 @@ public class UsuarioBo {
             usuarioDao = new UsuarioDao();
 
             if (usuarioDao.buscarPorEmail(usuario.getEmail()) != null) {
-                throw new ExcecoesRegraNegocio("Já existe um usuário cadastrado com este e-mail.");
+                throw new ExcecoesRegraNegocio("Já existe um usuário cadastrado com este e-mail.", HttpStatus.CONFLICT);
             }
 
             usuario.setPerfil("USER");
@@ -67,7 +68,7 @@ public class UsuarioBo {
             usuarioDao = new UsuarioDao();
 
             if (usuarioDao.buscarPorEmail(email) == null) {
-                throw new ExcecoesRegraNegocio("Usuário não encontrado para o e-mail informado.");
+                throw new ExcecoesRegraNegocio("Usuário não encontrado para o e-mail informado.", HttpStatus.NOT_FOUND);
             }
 
             usuarioDao.deletarPorEmail(email);
@@ -87,8 +88,12 @@ public class UsuarioBo {
         try {
             usuarioDao = new UsuarioDao();
 
-            if (usuarioDao.buscarPorEmail(usuario.getEmail()) == null) {
-                throw new ExcecoesRegraNegocio("Usuário não encontrado para atualização.");
+            Usuario atual = usuarioDao.buscarPorEmail(usuario.getEmail());
+            if (atual == null) {
+                throw new ExcecoesRegraNegocio("Usuário não encontrado para atualização.", HttpStatus.NOT_FOUND);
+            }
+            if (usuario.getSenha() == null || usuario.getSenha().trim().isEmpty()) {
+                usuario.setSenha(atual.getSenha());
             }
 
             usuario.atualizarTier();

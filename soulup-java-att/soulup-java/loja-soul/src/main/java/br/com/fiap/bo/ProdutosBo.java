@@ -4,6 +4,7 @@ import br.com.fiap.dao.ProdutosDao;
 import br.com.fiap.entities.Produtos;
 import br.com.fiap.excecoes.ExcecoesConexao;
 import br.com.fiap.excecoes.ExcecoesRegraNegocio;
+import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 
@@ -58,7 +59,7 @@ public class ProdutosBo {
             produtosDao = new ProdutosDao();
 
             if (produtosDao.buscarPorId(produto.getId()) == null) {
-                throw new ExcecoesRegraNegocio("Produto não encontrado para atualização.");
+                throw new ExcecoesRegraNegocio("Produto não encontrado para atualização.", HttpStatus.NOT_FOUND);
             }
 
             produtosDao.atualizar(produto);
@@ -79,7 +80,7 @@ public class ProdutosBo {
             produtosDao = new ProdutosDao();
 
             if (produtosDao.buscarPorId(id) == null) {
-                throw new ExcecoesRegraNegocio("Produto não encontrado para o ID informado.");
+                throw new ExcecoesRegraNegocio("Produto não encontrado para o ID informado.", HttpStatus.NOT_FOUND);
             }
 
             produtosDao.deletar(id);

@@ -5,6 +5,7 @@ import br.com.fiap.entities.Administrador;
 import br.com.fiap.entities.Usuario;
 import br.com.fiap.excecoes.ExcecoesConexao;
 import br.com.fiap.excecoes.ExcecoesRegraNegocio;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class UsuarioController {
             @RequestHeader(value = "Admin-Senha", required = false) String senhaAdmin) throws ExcecoesConexao, ExcecoesRegraNegocio {
 
         if (!adminPadrao.validarCredenciais(emailAdmin, senhaAdmin)) {
-            throw new ExcecoesRegraNegocio("Acesso negado: apenas Administradores possuem essa permissão.");
+            throw new ExcecoesRegraNegocio("Acesso negado: apenas Administradores possuem essa permissão.", HttpStatus.FORBIDDEN);
         }
         return ResponseEntity.ok(usuarioBo.selecionarBo());
     }
@@ -37,7 +38,7 @@ public class UsuarioController {
             @PathVariable String email) throws ExcecoesConexao, ExcecoesRegraNegocio {
 
         if (!adminPadrao.validarCredenciais(emailAdmin, senhaAdmin)) {
-            throw new ExcecoesRegraNegocio("Acesso negado: apenas Administradores podem deletar usuários.");
+            throw new ExcecoesRegraNegocio("Acesso negado: apenas Administradores possuem essa permissão.", HttpStatus.FORBIDDEN);
         }
 
         usuarioBo.deletarPorEmailBo(email);
@@ -69,7 +70,6 @@ public class UsuarioController {
         return ResponseEntity.ok(mensagem);
     }
 
-    // PUT: Atualizar dados do usuário
     @PutMapping
     public ResponseEntity<Void> atualizarRs(@RequestBody Usuario usuario) throws ExcecoesConexao, ExcecoesRegraNegocio {
         usuarioBo.atualizarBo(usuario);
@@ -81,7 +81,7 @@ public class UsuarioController {
     public ResponseEntity<Usuario> loginRs(@RequestBody Usuario loginInput) throws ExcecoesConexao, ExcecoesRegraNegocio {
         Usuario usuario = usuarioBo.buscarPorEmailBo(loginInput.getEmail());
 
-        if (usuario != null && usuario.getSenha().equals(loginInput.getSenha())) {
+        if (usuario != null && usuario.getSenha() != null && usuario.getSenha().equals(loginInput.getSenha())) {
             return ResponseEntity.ok(usuario);
         }
         return ResponseEntity.status(org.springframework.http.HttpStatus.UNAUTHORIZED).build();
