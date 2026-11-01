@@ -12,7 +12,6 @@ public class AdministradorController {
 
     private AdministradorBo adminBo = new AdministradorBo();
 
-    // POST /administradores/login -> Autenticação de E-mail e Senha
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Administrador adminInput) {
         try {

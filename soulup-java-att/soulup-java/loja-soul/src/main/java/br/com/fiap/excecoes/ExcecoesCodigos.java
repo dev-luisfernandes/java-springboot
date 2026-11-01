@@ -18,7 +18,6 @@ public class ExcecoesCodigos {
                 Map.of("erro", String.valueOf(status.value()), "mensagem", mensagem));
     }
 
-    // Regras de negócio: o status vem da própria exceção (400, 403, 404, 409...)
     @ExceptionHandler(ExcecoesRegraNegocio.class)
     public ResponseEntity<Map<String, String>> regraNegocio(ExcecoesRegraNegocio e) {
         return resposta(e.getStatus(), e.getMessage());
